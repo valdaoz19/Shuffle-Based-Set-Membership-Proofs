@@ -1,0 +1,20 @@
+[package]
+name = "aml-bench"
+description = "Benchmarks for ZKP AML PoC"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+aml-crypto-ibc = { workspace = true }
+aml-crypto-shuffle = { workspace = true }
+aml-persephone = { workspace = true }
+rand = { workspace = true }
+
+[[bench]]
+name = "aml_bench"
+harness = false
+
+[dev-dependencies]
+criterion = { workspace = true }

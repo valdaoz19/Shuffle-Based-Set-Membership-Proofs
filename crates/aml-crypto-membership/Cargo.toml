@@ -1,0 +1,17 @@
+[package]
+name = "aml-crypto-membership"
+description = "Shuffle-based set membership proof for IBC commitments"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+aml-core = { workspace = true }
+aml-crypto-ibc = { workspace = true }
+aml-crypto-shuffle = { workspace = true }
+rand = { workspace = true }
+rand_core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+base64 = { workspace = true }
+sha3 = { workspace = true }

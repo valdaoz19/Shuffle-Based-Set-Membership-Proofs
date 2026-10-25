@@ -1,0 +1,43 @@
+services:
+  paypay:
+    build: .
+    command: aml-paypay
+    environment:
+      PAYPAY_PORT: "8893"
+    ports:
+      - "8893:8893"
+
+  alipay:
+    build: .
+    command: aml-alipay
+    environment:
+      ALIPAY_PORT: "8892"
+      PAYPAY_BASE_URL: http://paypay:8893
+    depends_on:
+      - paypay
+    ports:
+      - "8892:8892"
+
+  wallet:
+    build: .
+    command: aml-wallet
+    environment:
+      WALLET_PORT: "8891"
+      ALIPAY_BASE_URL: http://alipay:8892
+      PAYPAY_BASE_URL: http://paypay:8893
+    depends_on:
+      - alipay
+      - paypay
+    ports:
+      - "8891:8891"
+
+  aml-api:
+    build: .
+    command: aml-api
+    environment:
+      PORT: "8880"
+      AML_AUDIT_DB_URL: sqlite:/app/data/aml_audit.sqlite
+    ports:
+      - "8880:8880"
+    profiles:
+      - legacy

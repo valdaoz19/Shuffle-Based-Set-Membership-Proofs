@@ -1,0 +1,31 @@
+[package]
+name = "aml-metrics"
+description = "Stakeholder-friendly metrics runner for AML ZKP PoC"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "aml-metrics"
+path = "src/main.rs"
+
+[lib]
+name = "aml_metrics"
+path = "src/lib.rs"
+
+[dependencies]
+aml-core = { workspace = true }
+aml-crypto-ibc = { workspace = true }
+aml-crypto-membership = { workspace = true }
+aml-crypto-shuffle = { workspace = true }
+aml-crypto-update = { workspace = true }
+aml-crypto-window = { workspace = true }
+aml-three = { workspace = true }
+anyhow = { workspace = true }
+chrono = { workspace = true }
+hex = { workspace = true }
+rand = { workspace = true }
+rust_xlsxwriter = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha3 = { workspace = true }

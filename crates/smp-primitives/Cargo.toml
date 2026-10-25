@@ -1,0 +1,14 @@
+[package]
+name = "smp-primitives"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ark-bls12-381.workspace = true
+ark-ec.workspace = true
+ark-ff.workspace = true
+ark-serialize.workspace = true
+sha2.workspace = true
+rand.workspace = true
+anyhow.workspace = true

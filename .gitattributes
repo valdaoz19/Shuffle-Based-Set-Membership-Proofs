@@ -1,0 +1,4 @@
+# Preserve document bytes; PDFs can otherwise look like text to Git.
+*.pdf binary
+*.png binary
+*.xlsx binary

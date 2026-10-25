@@ -1,0 +1,22 @@
+[package]
+name = "aml-protocol"
+description = "End-to-end ZKP AML verification pipeline orchestrator"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+aml-core = { workspace = true }
+aml-crypto-ibc = { workspace = true }
+aml-crypto-membership = { workspace = true }
+aml-crypto-shuffle = { workspace = true }
+aml-crypto-window = { workspace = true }
+aml-crypto-update = { workspace = true }
+aml-persephone = { workspace = true }
+chrono = { workspace = true }
+rand = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+rand = { workspace = true }

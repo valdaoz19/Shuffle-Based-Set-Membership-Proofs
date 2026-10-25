@@ -1,0 +1,20 @@
+[package]
+name = "smp-e1"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+smp-primitives.workspace = true
+smp-vc.workspace = true
+ark-ec.workspace = true
+ark-ff.workspace = true
+ark-serialize.workspace = true
+rand.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+hex.workspace = true
+rust_xlsxwriter.workspace = true
+libc = "0.2"

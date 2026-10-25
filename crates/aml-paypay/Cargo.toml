@@ -1,0 +1,31 @@
+[package]
+name = "aml-paypay"
+description = "Dummy PayPay server/prover for three-server AML ZKP demo"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "aml-paypay"
+path = "src/main.rs"
+
+[dependencies]
+aml-core = { workspace = true }
+aml-crypto-ibc = { workspace = true }
+aml-crypto-membership = { workspace = true }
+aml-crypto-shuffle = { workspace = true }
+aml-crypto-window = { workspace = true }
+aml-metrics = { workspace = true }
+aml-protocol = { workspace = true }
+aml-three = { workspace = true }
+anyhow = { workspace = true }
+axum = { workspace = true }
+chrono = { workspace = true }
+rand = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+uuid = { workspace = true }

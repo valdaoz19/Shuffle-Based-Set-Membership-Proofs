@@ -1,0 +1,18 @@
+[package]
+name = "aml-crypto-window"
+description = "Sliding window aggregation and verified to-do list"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+aml-core = { workspace = true }
+aml-crypto-ibc = { workspace = true }
+chrono = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+rand = { workspace = true }

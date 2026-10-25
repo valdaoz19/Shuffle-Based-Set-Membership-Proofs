@@ -1,0 +1,16 @@
+[package]
+name = "smp-vc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+smp-primitives.workspace = true
+ark-bls12-381.workspace = true
+ark-ec.workspace = true
+ark-ff.workspace = true
+ark-serialize.workspace = true
+rand.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+zeroize = "1"

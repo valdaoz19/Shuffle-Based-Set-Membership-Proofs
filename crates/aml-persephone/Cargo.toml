@@ -1,0 +1,16 @@
+[package]
+name = "aml-persephone"
+description = "Adapter for persephone-service (cklr_service) ZKNNP/ZKRP"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+aml-core = { workspace = true }
+cklr_service = { workspace = true }
+curve25519-dalek = { workspace = true }
+num-bigint = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+base64 = { workspace = true }
+thiserror = { workspace = true }

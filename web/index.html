@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZKP AML Cross-Border PoC — Singapore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styles/app.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <header class="mb-10">
+      <p class="text-emerald-400 text-sm font-semibold tracking-wide uppercase">Zero-Knowledge Proof · AML</p>
+      <h1 class="text-3xl font-bold mt-2">Cross-Border Payment Verification</h1>
+      <p class="text-slate-400 mt-2">
+        Privacy-preserving check: 1-year sliding window threshold in Singapore (MAS-style demo).
+        Identity and exact amounts are never revealed publicly.
+      </p>
+    </header>
+
+    <section class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
+        <h2 class="font-semibold text-lg mb-3">Public Parameters</h2>
+        <dl class="space-y-2 text-sm">
+          <div class="flex justify-between"><dt class="text-slate-400">Threshold τ</dt><dd id="cfg-threshold">—</dd></div>
+          <div class="flex justify-between"><dt class="text-slate-400">Window</dt><dd id="cfg-window">—</dd></div>
+          <div class="flex justify-between"><dt class="text-slate-400">Max tx</dt><dd id="cfg-max">—</dd></div>
+          <div class="flex justify-between"><dt class="text-slate-400">API key</dt><dd id="cfg-api-key">—</dd></div>
+        </dl>
+        <label class="block mt-4">
+          <span class="text-xs text-slate-400">Staging API key</span>
+          <input id="api-key" type="password" autocomplete="off"
+            class="mt-1 w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm" />
+        </label>
+      </div>
+      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
+        <h2 class="font-semibold text-lg mb-3">Demo Identity Binding</h2>
+        <p class="text-xs text-slate-400 mb-2">Transaction ID commitment (c_tid)</p>
+        <code id="tx-commitment" class="block text-xs break-all bg-slate-950 p-2 rounded border border-slate-800">Loading…</code>
+      </div>
+    </section>
+
+    <section class="rounded-xl border border-slate-800 bg-slate-900/60 p-6 mb-8">
+      <h2 class="font-semibold text-lg mb-2">Skenario Demo</h2>
+
+      <fieldset class="space-y-3 mb-5">
+        <label class="flex items-start gap-3 rounded-lg border border-emerald-900/50 bg-emerald-950/20 p-4 cursor-pointer hover:border-emerald-700">
+          <input type="radio" name="scenario" value="compliant" checked class="mt-1" />
+          <span>
+            <span class="font-medium text-emerald-300">Compliant — dalam batas AML</span>
+            <span class="block text-xs text-slate-400 mt-1">
+              Riwayat SGD 12.000 + transaksi SGD 2.000 = SGD 14.000 (&lt; limit SGD 20.000) → <strong>APPROVED</strong>
+            </span>
+          </span>
+        </label>
+        <label class="flex items-start gap-3 rounded-lg border border-rose-900/50 bg-rose-950/20 p-4 cursor-pointer hover:border-rose-700">
+          <input type="radio" name="scenario" value="exceeded" class="mt-1" />
+          <span>
+            <span class="font-medium text-rose-300">Exceeded — melebihi batas AML</span>
+            <span class="block text-xs text-slate-400 mt-1">
+              Riwayat SGD 19.000 + transaksi SGD 5.000 = SGD 24.000 (&gt; limit SGD 20.000) → <strong>REJECTED</strong>
+            </span>
+          </span>
+        </label>
+      </fieldset>
+
+      <div class="rounded-lg bg-slate-950/80 border border-slate-800 p-4 text-sm space-y-1 mb-5">
+        <p id="scenario-summary" class="text-slate-300">Memuat skenario…</p>
+        <p id="scenario-history" class="text-slate-500 text-xs"></p>
+        <p id="scenario-projected" class="text-slate-500 text-xs"></p>
+        <p id="scenario-expected" class="text-slate-500 text-xs flex items-center gap-2">
+          Hasil yang diharapkan: <span id="expected-badge"></span>
+        </p>
+      </div>
+
+      <h2 class="font-semibold text-lg mb-4">AML Verification Simulator</h2>
+      <form id="verify-form" class="space-y-4">
+        <label class="block">
+          <span class="text-sm text-slate-400">Simulated payment amount (SGD)</span>
+          <input id="amount" type="number" step="0.01" min="0.01" value="2000.00"
+            class="mt-1 w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2" />
+        </label>
+        <button id="run-check" type="submit"
+          class="w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold py-2.5 transition">
+          Run AML Verification Check
+        </button>
+      </form>
+      <p id="loading" class="hidden mt-3 text-sm text-slate-400">Running ZKP pipeline (IBC → Shuffle → ZK-MNNP)…</p>
+    </section>
+
+    <section id="result-panel" class="hidden rounded-xl border p-6 mb-8">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span id="decision-badge" class="px-4 py-1.5 rounded-full text-sm font-bold tracking-wide"></span>
+        <span id="exec-time" class="text-xs text-slate-500"></span>
+      </div>
+      <p id="result-message" class="text-slate-300 mb-4"></p>
+
+      <div id="audit-actions" class="hidden mb-4">
+        <div class="grid sm:grid-cols-3 gap-2">
+          <button id="view-audit-proof" type="button"
+            class="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-emerald-600">
+            View Audit Proof
+          </button>
+          <button id="verify-audit-hash" type="button"
+            class="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-emerald-600">
+            Verify Audit Hash
+          </button>
+          <button id="view-ledger" type="button"
+            class="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-emerald-600">
+            View Ledger
+          </button>
+        </div>
+        <pre id="audit-output" class="hidden mt-3 text-xs overflow-auto bg-slate-950 p-4 rounded border border-slate-800 max-h-80"></pre>
+      </div>
+
+      <button id="toggle-proof"
+        class="text-sm text-emerald-400 hover:text-emerald-300 underline underline-offset-4 mb-3"
+        type="button">
+        Show Technical Academic Proof (ZKP Metadata)
+      </button>
+      <div id="proof-section" class="hidden">
+        <p class="text-xs text-slate-500 mb-2">
+          Cryptographic proof layout for thesis / exam presentation (commitments & sigma-protocol artifacts).
+        </p>
+        <pre id="proof-output" class="text-xs overflow-auto bg-slate-950 p-4 rounded border border-slate-800 max-h-96"></pre>
+      </div>
+    </section>
+
+    <footer class="text-xs text-slate-600">
+      Pipeline: IBC → Verifiable Shuffle → Sliding Window → ZK-MNNP Threshold (persephone-service)
+    </footer>
+  </div>
+  <script src="/app.js?v=4"></script>
+</body>
+</html>

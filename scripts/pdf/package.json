@@ -1,0 +1,8 @@
+{
+  "name": "zkp-research-pdf-generators",
+  "private": true,
+  "description": "Local Markdown parser for research PDF generation",
+  "dependencies": {
+    "marked": "17.0.5"
+  }
+}
